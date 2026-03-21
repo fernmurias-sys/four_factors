@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>March Madness 2026 — Betting Edge</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'DM Sans',-apple-system,sans-serif}
+body{background:#0d0d0d;color:#fff;min-height:100vh}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes su{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+.wrap{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+.tag{font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;display:inline-block}
+.tag-ml{background:rgba(167,139,250,.12);color:#a78bfa}
+.tag-spr{background:rgba(0,200,5,.08);color:#00c805}
+.tag-dog{background:rgba(245,158,11,.1);color:#f59e0b}
+.stat-row{display:flex;align-items:flex-start;gap:8px;padding:6px 10px;border-radius:8px;margin-bottom:4px}
+.stat-good{background:rgba(0,200,5,.04);border:1px solid rgba(0,200,5,.08)}
+.stat-bad{background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.08)}
+.card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:18px 16px;margin-bottom:10px}
+.other{border-bottom:1px solid rgba(255,255,255,.05);padding:14px 0}
+.btn{width:100%;padding:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;cursor:pointer;font-size:12px;font-weight:600;color:rgba(255,255,255,.45);font-family:inherit;transition:all .2s}
+.btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:100;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.modal{width:100%;max-width:640px;max-height:93vh;background:#141414;border-radius:20px 20px 0 0;overflow:auto;padding:16px 16px 40px;animation:su .25s ease}
+.pbar{flex:1;height:5px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:3px;transition:width .6s}
+.h2h-row{display:flex;align-items:center;padding:6px 4px;border-bottom:1px solid rgba(255,255,255,.025)}
+.h2h-label{width:70px;text-align:center;font-size:10px;color:rgba(255,255,255,.3);font-weight:500}
+.h2h-val{flex:1;font-size:13px;font-variant-numeric:tabular-nums}
+.h2h-win{font-weight:700;color:#fff}
+.h2h-lose{font-weight:400;color:rgba(255,255,255,.3)}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const T={"Michigan":{rk:2,rec:"31-3",seed:1,adjoe:127.6,adjde:91,net:36.6,barthag:.9799,efgO:58.1,efgD:44.7,tor:16.7,tord:15.5,orb:35.4,drb:27.7,threeO:36,threeD:30.2,twoO:61,twoD:44.3,ftr:37.7,adjT:71.2,wab:14,wp:.912,oRk:1,dRk:1,efgORk:1,efgDRk:1,torRk:62,tordRk:73,orbRk:14,drbRk:16},"Saint Louis":{rk:42,rec:"28-5",seed:9,adjoe:121.4,adjde:99.8,net:21.6,barthag:.917,efgO:52.6,efgD:48.3,tor:14.6,tord:18.1,orb:38.5,drb:23.3,threeO:34,threeD:32.6,twoO:53.7,twoD:48,ftr:35.1,adjT:73.5,wab:2.3,wp:.848,oRk:9,dRk:8,efgORk:34,efgDRk:14,torRk:13,tordRk:22,orbRk:4,drbRk:79},"Michigan St.":{rk:13,rec:"26-7",seed:3,adjoe:122.4,adjde:94.4,net:28,barthag:.9436,efgO:52.2,efgD:46,tor:15.3,tord:18.9,orb:39.1,drb:26.1,threeO:32.3,threeD:32.5,twoO:54.3,twoD:44.5,ftr:42.2,adjT:65.6,wab:9.2,wp:.788,oRk:7,dRk:2,efgORk:32,efgDRk:2,torRk:22,tordRk:16,orbRk:2,drbRk:8},"Louisville":{rk:17,rec:"24-10",seed:6,adjoe:119.7,adjde:96.3,net:23.4,barthag:.9232,efgO:51.1,efgD:46.3,tor:18.2,tord:18.1,orb:35.3,drb:29.2,threeO:32.3,threeD:32.9,twoO:53.1,twoD:44.5,ftr:39.2,adjT:67.5,wab:4.8,wp:.706,oRk:12,dRk:4,efgORk:41,efgDRk:3,torRk:76,tordRk:22,orbRk:16,drbRk:31},"Duke":{rk:1,rec:"32-2",seed:1,adjoe:128.2,adjde:90.8,net:37.4,barthag:.9813,efgO:56.8,efgD:46.2,tor:15.7,tord:18.1,orb:38.1,drb:24.8,threeO:35.1,threeD:30.4,twoO:60.1,twoD:46.6,ftr:37.8,adjT:65.8,wab:13.7,wp:.941,oRk:1,dRk:1,efgORk:2,efgDRk:2,torRk:33,tordRk:22,orbRk:5,drbRk:4},"TCU":{rk:48,rec:"22-13",seed:9,adjoe:116.6,adjde:97.8,net:18.8,barthag:.876,efgO:52.3,efgD:50.1,tor:17.5,tord:17.2,orb:38.8,drb:27.3,threeO:34.4,threeD:34.3,twoO:52.6,twoD:49.3,ftr:29.1,adjT:67.2,wab:1.1,wp:.629,oRk:19,dRk:7,efgORk:30,efgDRk:34,torRk:55,tordRk:39,orbRk:3,drbRk:13},"Houston":{rk:5,rec:"28-6",seed:2,adjoe:125.4,adjde:92.4,net:33,barthag:.9709,efgO:52.1,efgD:46.6,tor:13,tord:21,orb:35.9,drb:30.9,threeO:34.9,threeD:32.1,twoO:51.9,twoD:45.5,ftr:26.9,adjT:63.3,wab:9,wp:.824,oRk:3,dRk:1,efgORk:35,efgDRk:3,torRk:1,tordRk:3,orbRk:10,drbRk:48},"Texas A&M":{rk:39,rec:"21-11",seed:10,adjoe:116.6,adjde:97.8,net:18.8,barthag:.8756,efgO:52,efgD:49.3,tor:16.1,tord:17.7,orb:37.7,drb:26.3,threeO:33.8,threeD:34.1,twoO:53.1,twoD:48.1,ftr:37.8,adjT:66.5,wab:.3,wp:.656,oRk:19,dRk:7,efgORk:36,efgDRk:25,torRk:39,tordRk:33,orbRk:6,drbRk:9},"Gonzaga":{rk:11,rec:"30-3",seed:3,adjoe:120.3,adjde:94,net:26.3,barthag:.9445,efgO:56.3,efgD:46.2,tor:13.7,tord:20.5,orb:34.8,drb:25.9,threeO:34,threeD:30.8,twoO:58.7,twoD:46.2,ftr:31.1,adjT:68.9,wab:7.4,wp:.909,oRk:10,dRk:2,efgORk:6,efgDRk:3,torRk:5,tordRk:5,orbRk:15,drbRk:5},"Texas":{rk:45,rec:"18-14",seed:11,adjoe:124,adjde:106.4,net:17.6,barthag:.8538,efgO:54.2,efgD:51.2,tor:15.3,tord:13.4,orb:35.7,drb:26.9,threeO:34.9,threeD:36,twoO:55.3,twoD:49.8,ftr:46.2,adjT:67.1,wab:-.2,wp:.562,oRk:6,dRk:34,efgORk:17,efgDRk:47,torRk:24,tordRk:95,orbRk:9,drbRk:9},"Illinois":{rk:6,rec:"24-8",seed:3,adjoe:131.9,adjde:98.2,net:33.7,barthag:.9676,efgO:55.1,efgD:47.6,tor:13.2,tord:11.6,orb:38.7,drb:27,threeO:34.7,threeD:31.4,twoO:58.2,twoD:48,ftr:32.9,adjT:65.7,wab:6.6,wp:.75,oRk:1,dRk:6,efgORk:11,efgDRk:8,torRk:3,tordRk:96,orbRk:3,drbRk:12},"VCU":{rk:47,rec:"26-7",seed:11,adjoe:116.1,adjde:96.6,net:19.5,barthag:.883,efgO:48.5,efgD:47.3,tor:18.7,tord:23.2,orb:37.2,drb:23.2,threeO:28,threeD:30,twoO:52.3,twoD:48.3,ftr:38.7,adjT:66.5,wab:4,wp:.788,oRk:21,dRk:5,efgORk:72,efgDRk:6,torRk:83,tordRk:1,orbRk:7,drbRk:80},"Nebraska":{rk:20,rec:"26-6",seed:4,adjoe:117.2,adjde:93.5,net:23.7,barthag:.931,efgO:55.4,efgD:47.8,tor:14.4,tord:19.2,orb:26.3,drb:27.7,threeO:35.3,threeD:29.9,twoO:58.1,twoD:50.6,ftr:27.2,adjT:66.8,wab:7.5,wp:.812,oRk:17,dRk:2,efgORk:8,efgDRk:10,torRk:10,tordRk:12,orbRk:86,drbRk:16},"Vanderbilt":{rk:10,rec:"26-8",seed:5,adjoe:127.5,adjde:99.3,net:28.2,barthag:.9461,efgO:55.3,efgD:48.8,tor:13.3,tord:17.9,orb:31.2,drb:31.6,threeO:35.5,threeD:32.2,twoO:56.8,twoD:49.1,ftr:38.2,adjT:69,wab:7.3,wp:.765,oRk:2,dRk:8,efgORk:10,efgDRk:16,torRk:3,tordRk:29,orbRk:43,drbRk:64},"Arkansas":{rk:19,rec:"25-8",seed:4,adjoe:123.8,adjde:96.7,net:27.1,barthag:.9385,efgO:52.7,efgD:47.1,tor:17.1,tord:19.5,orb:40.3,drb:27.3,threeO:32.5,threeD:31.2,twoO:55.1,twoD:47.1,ftr:42.1,adjT:72,wab:5.1,wp:.758,oRk:5,dRk:5,efgORk:29,efgDRk:5,torRk:54,tordRk:8,orbRk:1,drbRk:13},"High Point":{rk:92,rec:"30-4",seed:12,adjoe:113.5,adjde:101.7,net:11.8,barthag:.7922,efgO:52.2,efgD:49.1,tor:17.6,tord:21.1,orb:36.3,drb:26.1,threeO:30.5,threeD:32.7,twoO:56.2,twoD:48.9,ftr:35.1,adjT:74,wab:-2.4,wp:.882,oRk:28,dRk:16,efgORk:32,efgDRk:21,torRk:58,tordRk:3,orbRk:11,drbRk:8}};
+
+// UPDATED LINES — Friday evening scrape
+const BIG=[
+{home:"Nebraska",away:"Vanderbilt",hS:4,aS:5,time:"8:45 PM",bet:"Nebraska ML +124",betType:"ML DOG",spread:2.5,ml:124,edge:18,edgeUnit:"%",modelSpread:-1.8,
+headline:"Plus-money on the model's favorite",
+angle:"Our win-probability model makes Nebraska a 61% favorite. Vegas has them as a 43% underdog at +124. That's an 18% ML mispricing — the biggest on the board. The efficiency-based point projection has this nearly dead even (Vandy by 1.8), meaning Nebraska wins often but by tight margins. That's exactly why the ML is the bet — you want the binary outcome at plus-money odds when the model says you win 6 out of 10.",
+why:[{stat:"93.5",label:"Nebraska AdjDE",note:"Top 2% defense nationally — Vanderbilt's offense will stall",good:1},{stat:"29.9%",label:"Nebraska 3P% D",note:"Best 3PT defense in the tourney field. Vandy shoots 35.5% from 3.",good:1},{stat:"26-6",label:"Big Ten record",note:"Nebraska went 26-6 in the best conference in America",good:1},{stat:"48.8%",label:"Vandy Opp eFG%",note:"Vanderbilt's defense allows 48.8% eFG — mediocre (16th pctile)",good:0}],
+injury:"Both teams fully healthy. Clean matchup, pure value play."},
+{home:"Michigan St.",away:"Louisville",hS:3,aS:6,time:"2:45 PM",bet:"Louisville +4.5",betType:"SPREAD DOG",spread:-4.5,ml:154,edge:3.6,edgeUnit:"pts",modelSpread:-0.9,
+headline:"Getting 4.5 points in a coin-flip game",
+angle:"The model projects Michigan State by just 0.9 points — essentially a toss-up — but the spread is 4.5. Louisville is getting 3.6 extra points of cushion in a game the model says is nearly even. Yes, Mikel Brown Jr. (18.2 PPG) is out, but the line already adjusted for that. When the model says a game is decided by less than 1 point and you're getting 4.5, you take the points.",
+why:[{stat:"+0.9",label:"Model projected margin",note:"MSU by less than 1 pt — this is a coin flip",good:1},{stat:"+4.5",label:"Louisville getting",note:"3.6 more points than the model says they need",good:1},{stat:"46.3%",label:"Louisville Def eFG%",note:"Top 3% nationally — elite defense travels",good:1},{stat:"OUT",label:"Mikel Brown Jr.",note:"18.2 PPG star is out, but line already moved from -6.5 to -4.5",good:0}],
+injury:"Louisville: Mikel Brown Jr. (back) OUT first weekend. But line adjusted from -6.5 to -4.5 for this."},
+{home:"Duke",away:"TCU",hS:1,aS:9,time:"5:15 PM",bet:"Duke -11.5",betType:"SPREAD",spread:-11.5,ml:-700,edge:2.6,edgeUnit:"pts",modelSpread:-14.1,
+headline:"Model says Duke by 14.1 — line is 11.5",
+angle:"Duke has the #1 net rating in the country (+37.4) even without Caleb Foster (foot, OUT). The model projects Duke winning by 14.1 points, giving 2.6 points of spread value. The win% gap (.941 vs .629) is the widest in any R32 matchup. Cameron Boozer had 22/13 in the R1 scare vs Siena and the Blue Devils adjusted. TCU is solid but the talent gap is real.",
+why:[{stat:"+14.1",label:"Model projected margin",note:"Line is 11.5 → 2.6 points of spread value",good:1},{stat:".941",label:"Duke Win%",note:"32-2 overall — best record in D1",good:1},{stat:".629",label:"TCU Win%",note:"22-13 overall. Widest win% gap on the board.",good:0},{stat:"#1",label:"Duke Net Rating",note:"+37.4 — best in the country",good:1}],
+injury:"Duke: Caleb Foster (foot) OUT. Ngongba (foot) GTD — trending positive."}
+];
+
+const OTHERS=[
+{bet:"Michigan -12.5",edge:2.4,unit:"pts",quick:"Projected margin: Michigan by 14.9 vs updated line of 12.5. Was 7.4 pts of edge at -7.5 but line moved. Still 2.4 pts of value. #1 offense AND defense vs A-10 team.",flag:null,home:"Michigan",away:"Saint Louis",hS:1,aS:9,time:"12:10 PM"},
+{bet:"Arkansas -11.5",edge:1.9,unit:"pts",quick:"Projected margin: Arkansas by 13.4 vs line of 11.5. Arkansas has the #1 ORB% in America (40.3%). Model projects 92.9 points for Arkansas.",flag:"High Point on 14-game win streak. Just upset Wisconsin. Cinderella energy is real.",home:"Arkansas",away:"High Point",hS:4,aS:12,time:"9:45 PM"},
+{bet:"Gonzaga -5.5",edge:1.7,unit:"pts",quick:"Projected margin: Gonzaga by 7.2 vs line of 5.5. Only 1.7 pts of modeled edge — but Texas is playing 3rd game in 5 days (fatigue isn't in model). Top-3% defense vs bottom-5% turnover forcing.",flag:"Fatigue angle is real and unmodeled. Stronger than the numbers alone suggest.",home:"Gonzaga",away:"Texas",hS:3,aS:11,time:"7:10 PM"},
+{bet:"Illinois -10.5",edge:1.1,unit:"pts",quick:"Projected margin: Illinois by 11.6. Thin 1.1-pt edge. #1 AdjOE but VCU forces turnovers at #1 rate nationally — creates variance.",flag:"VCU riding 7-game streak. Just upset #6 UNC. Hot hand creates variance.",home:"Illinois",away:"VCU",hS:3,aS:11,time:"7:50 PM"},
+{bet:"Houston -9.5",edge:0.5,unit:"pts",quick:"Projected margin: Houston by 10.0. Basically on the number. Pass unless you have a strong lean.",flag:null,home:"Houston",away:"Texas A&M",hS:2,aS:10,time:"6:10 PM"},
+];
+
+function pc(v){return v<=5?"#00c805":v<=15?"#4ade80":v<=30?"#86efac":v<=50?"rgba(255,255,255,.35)":v<=70?"rgba(255,255,255,.25)":"#ef4444"}
+
+let modalData=null;
+
+function renderModal(g){
+  const h=T[g.home],a=T[g.away];if(!h||!a)return'';
+  const stats=[["AdjOE",h.adjoe,a.adjoe,1],["AdjDE",h.adjde,a.adjde,0],["Net Rtg",h.net,a.net,1],["eFG% O",h.efgO,a.efgO,1],["eFG% D",h.efgD,a.efgD,0],["TOV%",h.tor,a.tor,0],["Opp TOV",h.tord,a.tord,1],["ORB%",h.orb,a.orb,1],["DRB%",h.drb,a.drb,0],["3P% O",h.threeO,a.threeO,1],["3P% D",h.threeD,a.threeD,0],["2P% O",h.twoO,a.twoO,1],["2P% D",h.twoD,a.twoD,0],["FTR",h.ftr,a.ftr,1],["Tempo",h.adjT,a.adjT,-1],["BARTHAG",h.barthag,a.barthag,1],["WAB",h.wab,a.wab,1]];
+  const pcts=[["Off",h.oRk,a.oRk],["Def",h.dRk,a.dRk],["eFG O",h.efgORk,a.efgORk],["eFG D",h.efgDRk,a.efgDRk],["TOV",h.torRk,a.torRk],["Opp TOV",h.tordRk,a.tordRk],["ORB",h.orbRk,a.orbRk],["DRB",h.drbRk,a.drbRk]];
+  let statsHtml=stats.map(([l,hv,av,hb])=>{
+    const hw=hb<0?false:hb?hv>av:hv<av;const aw=hb<0?false:!hw;
+    const fmt=v=>typeof v==='number'&&v<1&&v>0?v.toFixed(4):v;
+    return`<div class="h2h-row"><span class="h2h-val ${hw?'h2h-win':'h2h-lose'}" style="text-align:right">${fmt(hv)}</span><span class="h2h-label">${l}</span><span class="h2h-val ${aw?'h2h-win':'h2h-lose'}">${fmt(av)}</span></div>`;
+  }).join('');
+  let pctsHtml=[g.home,g.away].map((name,ti)=>{
+    const t=T[name];
+    return`<div><div style="font-size:11px;font-weight:700;margin-bottom:4px">${name}</div>${pcts.map(([lab,hv,av])=>{const v=ti===0?hv:av;const inv=100-v;return`<div style="display:flex;align-items:center;gap:4px;margin-bottom:3px"><span style="font-size:9px;color:rgba(255,255,255,.4);min-width:38px;text-align:right">${lab}</span><div class="pbar"><div class="pbar-fill" style="width:${inv}%;background:${pc(v)}"></div></div><span style="font-size:9px;font-weight:600;color:${pc(v)};min-width:20px">${Math.round(inv)}</span></div>`;}).join('')}</div>`;
+  }).join('');
+  const edgeExplain=g.betType==='ML DOG'||g.betType==='ML'
+    ?`Our model gives <strong style="color:#fff">${g.home}</strong> a <strong style="color:#00c805">${g.modelWin||61}%</strong> chance to win. The moneyline (${g.ml>0?'+':''}${g.ml}) implies only <strong>${g.vegasWin||43}%</strong>. The ${g.edge}% gap means the market is underpricing ${g.home}. You're getting paid like an underdog for a team the model thinks should be favored.`
+    :`Our model projects <strong style="color:#fff">${g.home}</strong> to win by <strong style="color:#00c805">${Math.abs(g.modelSpread)}</strong> points. The spread is ${Math.abs(g.spread)}. That's <strong style="color:#00c805">${g.edge} points</strong> of value — the model thinks ${g.spread<0?g.home:g.away} covers comfortably.`;
+  return`<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">
+<div style="width:36px;height:4px;background:rgba(255,255,255,.12);border-radius:2px;margin:0 auto 16px"></div>
+<div style="text-align:center;margin-bottom:16px"><div style="font-size:9px;color:rgba(255,255,255,.25);letter-spacing:2px;text-transform:uppercase">Full Stat Breakdown · Round of 32</div><div style="font-size:18px;font-weight:800;margin-top:4px">(${g.hS}) ${g.home} vs (${g.aS}) ${g.away}</div><div style="font-size:12px;color:rgba(255,255,255,.35);margin-top:2px">${g.time} ET</div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px"><div style="background:rgba(0,200,5,.06);border:1px solid rgba(0,200,5,.12);border-radius:12px;padding:10px 8px;text-align:center"><div style="font-size:22px;font-weight:800;color:#00c805">+${g.edge}${g.edgeUnit||'pts'}</div><div style="font-size:9px;color:rgba(255,255,255,.35);letter-spacing:1px;margin-top:2px">${g.betType==='ML DOG'?'ML EDGE':'SPREAD EDGE'}</div></div><div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 8px;text-align:center"><div style="font-size:22px;font-weight:800">${Math.abs(g.modelSpread)}</div><div style="font-size:9px;color:rgba(255,255,255,.35);letter-spacing:1px;margin-top:2px">MODEL MARGIN</div></div><div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 8px;text-align:center"><div style="font-size:22px;font-weight:800;color:rgba(255,255,255,.5)">${Math.abs(g.spread)}</div><div style="font-size:9px;color:rgba(255,255,255,.35);letter-spacing:1px;margin-top:2px">VEGAS LINE</div></div></div>
+<div style="background:rgba(255,255,255,.02);border-radius:10px;padding:12px;margin-bottom:16px;border:1px solid rgba(255,255,255,.04)"><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:1.5px;margin-bottom:4px">WHAT DOES THE EDGE MEAN?</div><div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.6">${edgeExplain}</div></div>
+<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;padding:0 4px;margin-bottom:6px"><span style="font-size:11px;font-weight:700">(${h.seed}) ${g.home} <span style="font-weight:400;color:rgba(255,255,255,.3)">${h.rec} · #${h.rk}</span></span><span style="font-size:11px;font-weight:700"><span style="font-weight:400;color:rgba(255,255,255,.3)">#${a.rk} · ${a.rec}</span> ${g.away} (${a.seed})</span></div>${statsHtml}</div>
+<div style="margin-bottom:16px"><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:1.5px;margin-bottom:8px">NATIONAL PERCENTILE (of 365 D1 teams)</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${pctsHtml}</div></div>
+${g.injury?`<div style="background:rgba(255,255,255,.02);border-radius:10px;padding:12px;margin-bottom:16px;border:1px solid rgba(255,255,255,.04)"><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:1.5px;margin-bottom:4px">INJURY NOTES</div><div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.5">${g.injury}</div></div>`:''}
+<button class="btn" onclick="closeModal()">Close</button></div></div>`;
+}
+
+function openModal(idx,isBig){
+  modalData=isBig?BIG[idx]:OTHERS[idx];
+  document.getElementById('modal-container').innerHTML=renderModal(modalData);
+}
+function closeModal(){document.getElementById('modal-container').innerHTML='';modalData=null;}
+
+function render(){
+  const app=document.getElementById('app');
+  let html=`
+<div style="margin-bottom:28px;animation:fi .4s ease">
+<div style="font-size:11px;color:rgba(255,255,255,.3)">Saturday March 21 · NCAA Round of 32</div>
+<div style="font-size:28px;font-weight:800;letter-spacing:-.5px;margin-top:2px">Today's Card</div></div>
+
+<div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;margin-bottom:28px;animation:fi .4s ease .05s both">
+<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:1.5px;margin-bottom:8px">HOW THIS WORKS</div>
+<div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7">We built a model that learned what stats predict tournament winners — trained on <strong style="color:#fff">19,452 matchups across 12 NCAA tournament seasons</strong> (2013–2025). It computes a win probability and a projected point margin for each matchup, then compares to Vegas lines. When the model sees a significant gap, that's edge — and that's where we bet. Spread edge is measured in <strong style="color:#00c805">points</strong>. ML edge is measured in <strong style="color:#a78bfa">win probability %</strong>.</div>
+<div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">${[["84.1%","Test Accuracy"],["12","Seasons Trained"],["Spreads + ML Dogs","Bet Types"]].map(([v,l])=>`<div style="display:flex;align-items:center;gap:6px"><span style="font-size:14px;font-weight:800;color:#00c805">${v}</span><span style="font-size:11px;color:rgba(255,255,255,.3)">${l}</span></div>`).join('')}</div></div>
+
+<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;animation:fi .4s ease .1s both">Top 3 Plays</div>`;
+
+  BIG.forEach((g,i)=>{
+    const tagClass=g.betType==='ML DOG'?'tag-ml':g.betType.includes('DOG')?'tag-dog':'tag-spr';
+    html+=`<div class="card" style="animation:fi .4s ease ${.12+i*.07}s both">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+<div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span class="tag ${tagClass}">${g.betType}</span><span style="font-size:10px;color:rgba(255,255,255,.25)">(${g.hS}) vs (${g.aS}) · ${g.time} ET</span></div><div style="font-size:18px;font-weight:800">${g.bet}</div></div>
+<div style="text-align:right;flex-shrink:0"><div style="font-size:22px;font-weight:800;color:#00c805;line-height:1">+${g.edge}${g.edgeUnit||'pts'}</div><div style="font-size:9px;color:rgba(255,255,255,.25);margin-top:2px">${g.betType==='ML DOG'?'ML edge':'spread edge'}</div></div></div>
+<div style="font-size:14px;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:6px">${g.headline}</div>
+<div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:12px">${g.angle}</div>
+<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px">${g.why.map(w=>`<div class="stat-row ${w.good?'stat-good':'stat-bad'}"><span style="font-size:14px;font-weight:800;color:${w.good?'#00c805':'#ef4444'};min-width:52px;font-variant-numeric:tabular-nums">${w.stat}</span><div><div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.7)">${w.label}</div><div style="font-size:11px;color:rgba(255,255,255,.35)">${w.note}</div></div></div>`).join('')}</div>
+${g.injury?`<div style="font-size:11px;color:rgba(255,255,255,.3);line-height:1.5;margin-bottom:10px">🏥 ${g.injury}</div>`:''}
+<button class="btn" onclick="openModal(${i},true)">Full stat breakdown →</button></div>`;
+  });
+
+  html+=`<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;margin-top:28px;animation:fi .4s ease .4s both">Also On The Card</div>`;
+
+  OTHERS.forEach((g,i)=>{
+    html+=`<div class="other" style="animation:fi .3s ease ${.45+i*.06}s both">
+<div style="display:flex;justify-content:space-between;align-items:flex-start">
+<div style="flex:1"><div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="font-size:14px;font-weight:700">${g.bet}</span></div>
+<div style="font-size:11px;color:rgba(255,255,255,.25);margin-bottom:6px">(${g.hS}) ${g.home} vs (${g.aS}) ${g.away} · ${g.time}</div>
+<div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.5">${g.quick}</div>
+${g.flag?`<div style="font-size:11px;color:#f59e0b;margin-top:4px">⚠️ ${g.flag}</div>`:''}</div>
+<div style="text-align:right;flex-shrink:0;margin-left:12px"><div style="font-size:16px;font-weight:800;color:${g.edge>=2?'#00c805':'rgba(255,255,255,.4)'}">+${g.edge}</div><div style="font-size:9px;color:rgba(255,255,255,.2)">${g.unit} edge</div></div></div></div>`;
+  });
+
+  html+=`<div style="margin-top:32px;padding:16px;background:rgba(255,255,255,.02);border-radius:12px;border:1px solid rgba(255,255,255,.04);animation:fi .4s ease .7s both">
+<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:1.5px;margin-bottom:8px">READING THE PICKS</div>
+<div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.7"><strong style="color:#00c805">Spread edge (pts)</strong> = model's projected margin minus Vegas line. If model says -14 and line is -7.5, that's 6.5 pts of value.<br><br><strong style="color:#a78bfa">ML edge (%)</strong> = model's win probability minus what the moneyline implies. Plus-money on a team the model favors? That's the dream bet.</div></div>
+<div style="margin-top:24px;text-align:center;font-size:10px;color:rgba(255,255,255,.12);line-height:1.7">For entertainment only. Past performance ≠ future results. Gamble responsibly.</div>`;
+
+  html+=`<div id="modal-container"></div>`;
+  app.innerHTML=html;
+}
+
+render();
+</script>
+</body>
+</html>
